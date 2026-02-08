@@ -10,8 +10,7 @@ import { MdOutlineInventory } from "react-icons/md";
 import { IoStorefrontSharp } from "react-icons/io5";
 import { TbSmartHome } from "react-icons/tb";
 import { RiFileHistoryLine } from "react-icons/ri";
-import { LuSettings } from "react-icons/lu";
-import { IoPeopleCircle } from "react-icons/io5";
+
 
 interface MenuProps {
   isOpen: boolean;
@@ -48,20 +47,6 @@ export default function Menu({ isOpen, setIsOpen }: MenuProps) {
       icon: <RiFileHistoryLine />,
       label: "Historial",
       path: "/views/historial",
-    },
-
-    {
-      id: "soporte",
-      icon: <LuSettings />,
-      label: "Configuración",
-      path: "/views/soporte",
-    },
-
-    {
-      id: "perfil",
-      icon: <IoPeopleCircle />,
-      label: "Perfil",
-      path: "/views/perfil",
     },
   ];
 
