@@ -56,6 +56,22 @@ export default function Footer() {
       height={32}
       className="object-contain filter grayscale opacity-80"
     />,
+     <Image
+      key="criptomoneda"
+      src="/payments/criptomoneda.svg"
+      alt="criptomoneda"
+      width={56}
+      height={32}
+      className="object-contain filter grayscale opacity-80"
+    />,
+     <Image
+      key="qvapay"
+      src="/payments/qvapay.svg"
+      alt="qvapay"
+      width={56}
+      height={32}
+      className="object-contain filter grayscale opacity-80"
+    />,
   ];
 
   return (
