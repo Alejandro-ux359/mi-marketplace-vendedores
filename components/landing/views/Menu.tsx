@@ -10,7 +10,7 @@ import { MdOutlineInventory } from "react-icons/md";
 import { IoStorefrontSharp } from "react-icons/io5";
 import { TbSmartHome } from "react-icons/tb";
 import { RiFileHistoryLine } from "react-icons/ri";
-
+import { FaUsers } from "react-icons/fa6";
 
 interface MenuProps {
   isOpen: boolean;
@@ -26,6 +26,13 @@ export default function Menu({ isOpen, setIsOpen }: MenuProps) {
       icon: <TbSmartHome />,
       label: "Inicio",
       path: "/views/dashboard",
+    },
+
+ {
+      id: "usuarios",
+      icon: <FaUsers />,
+      label: "Usuarios",
+      path: "/views/usuarios",
     },
 
     {

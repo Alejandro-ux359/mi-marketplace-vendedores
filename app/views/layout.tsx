@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import Menu from "@/components/landing/views/Menu";
+import TopBar from "@/components/landing/views/TopBar";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -13,30 +16,37 @@ export default function DashboardLayout({
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar Menu */}
+      {/* Sidebar */}
       <Menu isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
-      {/* Contenido Principal - Se ajusta al ancho del menú */}
+      {/* Main */}
       <main
         className={`
-        flex-1 transition-all duration-400 ease-in-out
-        min-h-screen overflow-y-auto p-6
-        ${isSidebarOpen ? "lg:ml-56" : "lg:ml-18"}
-        w-full
-      `}
+          flex-1 transition-all duration-300 ease-in-out
+          min-h-screen overflow-y-auto
+          ${isSidebarOpen ? "lg:ml-56" : "lg:ml-18"}
+        `}
       >
-        {/* Header responsive para móviles */}
-        <div className="lg:hidden mb-6">
+        {/* Header móvil */}
+        <div className="lg:hidden px-6 py-4 flex items-center gap-3">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
           >
             {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
-          <span className="ml-3 font-semibold text-lg">RenshaMarket</span>
+          <span className="font-semibold text-lg">RenshaMarket</span>
         </div>
 
-        {children}
+        {/* TopBar desktop */}
+        <div className="hidden lg:block">
+          <TopBar />
+        </div>
+
+        {/* Contenido */}
+        <div className="p-6">
+          {children}
+        </div>
       </main>
     </div>
   );

@@ -9,7 +9,7 @@ export const handleNameChange = (
   value: string,
   setter: (val: string) => void,
 ) => {
-  let sanitized = value
+  const sanitized = value
     // Solo letras y espacios
     .replace(/[^a-zA-ZÀ-ÿ\s]/g, "")
     // Evita múltiples espacios seguidos
