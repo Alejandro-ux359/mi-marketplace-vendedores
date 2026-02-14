@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Head from "next/head";
 import { FcGoogle } from "react-icons/fc";
-import MyPhone from "../../../components/myPhone/MyPhone";
+import MyPhone from "../../../components/components/myPhone/MyPhone";
 import {
   handleEmailChange,
   handleNameChange,
