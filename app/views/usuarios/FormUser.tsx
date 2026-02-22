@@ -12,22 +12,17 @@ import {
   FormControlLabel,
   SelectChangeEvent,
 } from "@mui/material";
-
-export interface UsuarioFormData {
-  nombre: string;
-  apellido: string;
-  rol: string;
-  movil: number;
-  verificado: boolean;
-  estado: "Activo" | "Pendiente" | "Inactivo";
-}
+import { UsuarioFormData } from "@/components/components/tabla/export";
 
 interface FormUsuariosProps {
   onChange?: (data: UsuarioFormData) => void;
   initialData?: Partial<UsuarioFormData>;
 }
 
-export default function FormUsuarios({ onChange, initialData }: FormUsuariosProps) {
+export default function FormUsuarios({
+  onChange,
+  initialData,
+}: FormUsuariosProps) {
   const [formData, setFormData] = useState<UsuarioFormData>({
     nombre: initialData?.nombre || "",
     apellido: initialData?.apellido || "",
@@ -64,7 +59,10 @@ export default function FormUsuarios({ onChange, initialData }: FormUsuariosProp
   };
 
   return (
-    <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+    <Box
+      component="form"
+      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+    >
       <TextField
         label="Nombre"
         name="nombre"

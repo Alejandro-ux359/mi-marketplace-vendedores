@@ -3,10 +3,10 @@
 import DataContainer from "@/components/components/tabla/CardTable";
 import HeaderTablet from "@/components/components/tabla/HeaderTable";
 import { Box, Pagination, Typography } from "@mui/material";
-import TableFilter from "@/components/components/tabla/Filter";
-import TableSearch from "@/components/components/tabla/SearchTablet";
-import AgregarDatos from "@/components/components/tabla/AddTablet";
-import FormUsuarios from "@/components/components/tabla/FormTablet";
+import TableFilter from "@/components/components/buttons/Filter";
+import TableSearch from "@/components/components/buttons/SearchTablet";
+import AgregarDatos from "@/components/components/buttons/Add";
+import FormUsuarios from "@/app/views/usuarios/FormUser";
 
 export default function Usuarios() {
   const usuariosData = [

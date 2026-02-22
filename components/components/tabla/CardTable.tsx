@@ -25,16 +25,16 @@ export default function CardTable({
     >
       {action && (
         <Box
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      px: 2,
-      py: 1,
-      gap: 2,
-      flexWrap: "wrap", // responsive
-    }}
-  >
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            px: 2,
+            py: 1,
+            gap: 2,
+            flexWrap: "wrap", // responsive
+          }}
+        >
           {action}
         </Box>
       )}
@@ -45,7 +45,6 @@ export default function CardTable({
           sx={{
             p: 2,
             borderBottom: "1px solid #eee",
-            display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             gap: 2,

@@ -7,10 +7,14 @@ import { usePathname } from "next/navigation";
 
 //#region iconos
 import { MdOutlineInventory } from "react-icons/md";
-import { IoStorefrontSharp } from "react-icons/io5";
 import { TbSmartHome } from "react-icons/tb";
 import { RiFileHistoryLine } from "react-icons/ri";
 import { FaUsers } from "react-icons/fa6";
+
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import PermMediaIcon from '@mui/icons-material/PermMedia';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 interface MenuProps {
   isOpen: boolean;
@@ -35,7 +39,23 @@ export default function Menu({ isOpen, setIsOpen }: MenuProps) {
       path: "/views/usuarios",
     },
 
+   
+
+     {
+      id: "media",
+      icon: <PermMediaIcon />,
+      label: "Media",
+      path: "/views/media",
+    },
+
     {
+      id: "productos",
+      icon: <AddShoppingCartIcon />,
+      label: "Productos",
+      path: "/views/productos",
+    },
+
+ {
       id: "inventario",
       icon: <MdOutlineInventory />,
       label: "Inventario",
@@ -43,17 +63,10 @@ export default function Menu({ isOpen, setIsOpen }: MenuProps) {
     },
 
     {
-      id: "almacen",
-      icon: <IoStorefrontSharp />,
-      label: "Almacen",
-      path: "/views/almacen",
-    },
-
-    {
-      id: "historial",
-      icon: <RiFileHistoryLine />,
-      label: "Historial",
-      path: "/views/historial",
+      id: "finanzas",
+      icon: <AccountBalanceIcon />,
+      label: "Finanzas",
+      path: "/views/finanzas",
     },
   ];
 

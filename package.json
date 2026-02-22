@@ -17,6 +17,7 @@
     "@mui/lab": "^7.0.1-beta.21",
     "@mui/material": "^7.3.7",
     "@tanstack/react-table": "^8.21.3",
+    "ag-grid-react": "^35.1.0",
     "apexcharts": "^5.3.6",
     "better-auth": "^1.4.18",
     "chart.js": "^4.5.1",

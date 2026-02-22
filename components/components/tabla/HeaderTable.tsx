@@ -2,18 +2,7 @@
 
 import { Box, Checkbox, Typography } from "@mui/material";
 import { useState } from "react";
-
-interface HeaderColumn {
-  key: string;
-  label: string;
-  align?: "left" | "center" | "right";
-  width?: number | string;
-}
-
-interface HeaderTableProps {
-  columns: HeaderColumn[];
-  selectable?: boolean;
-}
+import { HeaderTableProps } from "./export";
 
 export default function HeaderTable({
   columns,
@@ -29,11 +18,11 @@ export default function HeaderTable({
   return (
     <Box
       sx={{
-        width:"100%",
+        width: "100%",
         display: "grid",
         gridTemplateColumns: `
           ${selectable ? "48px" : ""}
-          ${columns.map(c => c.width || "1fr").join(" ")}
+          ${columns.map((c) => c.width || "1fr").join(" ")}
         `,
         alignItems: "center",
         px: 2,
@@ -44,20 +33,33 @@ export default function HeaderTable({
     >
       {/* Checkbox selección */}
       {selectable && (
-        <Checkbox
-          checked={allSelected}
-          onChange={(e) => handleSelectAll(e.target.checked)}
-        />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            borderRight: "1px solid #e0e0e0",
+          }}
+        >
+          <Checkbox
+            checked={allSelected}
+            onChange={(e) => handleSelectAll(e.target.checked)}
+          />
+        </Box>
       )}
 
       {/* Títulos */}
-      {columns.map((col) => (
+      {columns.map((col, index) => (
         <Typography
           key={col.key}
           variant="subtitle2"
           sx={{
             fontWeight: 600,
-            textAlign: col.align || "left",
+            borderRight:
+              index !== columns.length - 1 ? "1px solid #e0e0e0" : "none",
+            textAlign: "center",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           {col.label}
