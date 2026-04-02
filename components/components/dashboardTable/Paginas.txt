@@ -1,0 +1,14 @@
+ - inicio  → mostrar las estadísticas del negocio
+ - Almacen → mostrar los productos activos que quedan y se agregan desde el inventario
+ - Inventario → agregar productos, cantidad, y demás detalles de los productos
+ - Resumen → resumen semanal / quincenal / mensual del total de las ganancias y perdidas tipo bolsa de valores
+ - Contacto/Perfil → contacto del usuario/ dueño del negocio
+ - soporte → mi correo
+
+
+
+opciones extras:
+
+ver lo de las sugerencias de marketing y anuncios
+
+

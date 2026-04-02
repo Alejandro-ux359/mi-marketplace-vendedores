@@ -106,6 +106,15 @@ export default function RegisterPage() {
                 onChange={(e) => handleNameChange(e.target.value, setLastName)}
               />
             </div>
+            <div className="row">
+              <input
+                type="text"
+                placeholder="Nombre de usuario"
+                required
+                value={lastName}
+                onChange={(e) => handleNameChange(e.target.value, setLastName)}
+              />
+            </div>
 
             {/* Correo */}
             <input

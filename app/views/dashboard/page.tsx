@@ -1,7 +1,11 @@
+import { SalesDashboard } from "@/components/components/dashboardTable";
+
 export default function Dashboard() {
   return (
-    <main>
-      <h1>Dashboard</h1>
-    </main>
+    <SalesDashboard
+      storeName="Tu Tienda"
+      period="Abr 2025"
+      
+    />
   );
 }
