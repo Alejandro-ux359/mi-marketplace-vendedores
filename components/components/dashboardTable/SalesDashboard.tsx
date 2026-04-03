@@ -1,37 +1,108 @@
 "use client";
 
+// ─── React & MUI ─────────────────────────────────────────────────────────────
 import React from "react";
-import { Box, Chip, Grid, Typography, useTheme } from "@mui/material";
-import StorefrontIcon from "@mui/icons-material/Storefront";
+import { Box, Chip, Grid } from "@mui/material";
 
-import { KpiCard } from "./KpiCard";
+// ─── Sub-componentes (misma carpeta) ─────────────────────────────────────────
+import { KpiCard }       from "./KpiCard";
 import { SparklineCard } from "./SparklineCard";
-import { BarChartCard } from "./BarChartCard";
-import { DataTable } from "./DataTable";
-import { DonutChart } from "./DonutChart";
-import { NavTree } from "./NavTree";
+import { BarChartCard }  from "./BarChartCard";
+import { DataTable }     from "./DataTable";
+import { DonutChart }    from "./DonutChart";
+import { NavTree }       from "./NavTree";
 
-import type {
-  KpiCardProps,
-  SparklineCardProps,
-  BarChartCardProps,
-  TableColumn,
-  DonutChartProps,
-  NavTreeProps,
-} from "../types/dashboard";
+// ─── Tipo ReactNode ───────────────────────────────────────────────────────────
+import type { ReactNode } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DATOS DEMO — reemplaza estos con los valores que lleguen de tu API
+// TIPOS LOCALES — evita la dependencia de ruta ../types/dashboard
 // ─────────────────────────────────────────────────────────────────────────────
 
-const DEMO_KPIS: KpiCardProps[] = [
-  { title: "Ventas totales",   value: "$48,320", trend: 25,  color: "success" },
-  { title: "Pedidos",          value: "1,245",   trend: -8,  color: "error"   },
-  { title: "Clientes nuevos",  value: "384",     trend: 12,  color: "primary" },
-  { title: "Ticket promedio",  value: "$38.80",  trend: 5,   color: "warning" },
+interface KpiCardPropsLocal {
+  title: string;
+  value: string | number;
+  trend?: number;
+  trendLabel?: string;
+  color?: "primary" | "success" | "error" | "warning" | "info";
+  prefix?: string;
+  suffix?: string;
+}
+
+interface SparklinePoint { label: string; value: number }
+interface SparklineCardPropsLocal {
+  title: string;
+  value: string | number;
+  trend?: number;
+  trendLabel?: string;
+  data: SparklinePoint[];
+  color?: string;
+  prefix?: string;
+  suffix?: string;
+}
+
+interface BarChartPoint { label: string; value: number; secondaryValue?: number }
+interface BarChartCardPropsLocal {
+  title: string;
+  value: string | number;
+  trend?: number;
+  trendLabel?: string;
+  data: BarChartPoint[];
+  color?: string;
+  secondaryColor?: string;
+  prefix?: string;
+  suffix?: string;
+  seriesLabel?: string;
+  secondarySeriesLabel?: string;
+}
+
+interface TableColumnLocal<T = Record<string, unknown>> {
+  key: keyof T & string;
+  label: string;
+  align?: "left" | "center" | "right";
+  width?: number | string;
+  renderCell?: (value: unknown, row: T) => ReactNode;
+}
+
+interface DonutSegment { label: string; value: number; color?: string; flag?: string }
+interface DonutChartPropsLocal {
+  title: string;
+  total?: string | number;
+  totalLabel?: string;
+  segments: DonutSegment[];
+}
+
+interface NavItem { label: string; href?: string; children?: NavItem[] }
+interface NavTreePropsLocal {
+  title: string;
+  items: NavItem[];
+  activeHref?: string;
+  onItemClick?: (item: NavItem) => void;
+}
+
+// ProductRow con firma de índice — requerida para DataTable genérico
+interface ProductRow {
+  [key: string]: unknown;
+  nombre: string;
+  estado: string;
+  usuarios: number;
+  ventas: number;
+  vistasUsuario: number;
+  tiempoPromedio: string;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DATOS DEMO
+// ─────────────────────────────────────────────────────────────────────────────
+
+const DEMO_KPIS: KpiCardPropsLocal[] = [
+  { title: "Ventas totales",  value: "$48,320", trend: 25,  color: "success" },
+  { title: "Pedidos",         value: "1,245",   trend: -8,  color: "error"   },
+  { title: "Clientes nuevos", value: "384",     trend: 12,  color: "primary" },
+  { title: "Ticket promedio", value: "$38.80",  trend: 5,   color: "warning" },
 ];
 
-const DEMO_SESSIONS: SparklineCardProps = {
+const DEMO_SESSIONS: SparklineCardPropsLocal = {
   title: "Visitas a la tienda",
   value: "13,277",
   trend: 32,
@@ -48,7 +119,7 @@ const DEMO_SESSIONS: SparklineCardProps = {
   ],
 };
 
-const DEMO_BAR: BarChartCardProps = {
+const DEMO_BAR: BarChartCardPropsLocal = {
   title: "Ingresos y costos mensuales",
   value: "$312K",
   trend: -4,
@@ -68,59 +139,50 @@ const DEMO_BAR: BarChartCardProps = {
   ],
 };
 
-interface ProductRow {
-  nombre: string;
-  estado: string;
-  usuarios: number;
-  ventas: number;
-  vistasUsuario: number;
-  tiempoPromedio: string;
-}
-
-const DEMO_COLUMNS: TableColumn<ProductRow>[] = [
-  { key: "nombre",        label: "Producto",       width: "30%" },
+const DEMO_COLUMNS: TableColumnLocal<ProductRow>[] = [
+  { key: "nombre",         label: "Producto",       width: "30%"   },
   {
     key: "estado",
     label: "Estado",
-    width: 90,
-    renderCell: (v) => (
+    width: 95,
+    renderCell: (v: unknown) => (
       <Chip
         label={v as string}
         size="small"
         sx={{
-          bgcolor: v === "Activo" ? "success.main" : "action.disabledBackground",
-          color:   v === "Activo" ? "#fff"         : "text.secondary",
+          bgcolor:    v === "Activo" ? "success.main" : "action.disabledBackground",
+          color:      v === "Activo" ? "#fff"          : "text.secondary",
           fontWeight: 600,
-          fontSize: 11,
+          fontSize:   11,
         }}
       />
     ),
   },
-  { key: "usuarios",      label: "Usuarios",        align: "right" },
-  { key: "ventas",        label: "Ventas ($)",       align: "right" },
-  { key: "vistasUsuario", label: "Vistas/usuario",  align: "right" },
-  { key: "tiempoPromedio",label: "T. promedio",     align: "right" },
+  { key: "usuarios",       label: "Usuarios",       align: "right" },
+  { key: "ventas",         label: "Ventas ($)",     align: "right" },
+  { key: "vistasUsuario",  label: "Vistas/usuario", align: "right" },
+  { key: "tiempoPromedio", label: "T. promedio",    align: "right" },
 ];
 
 const DEMO_ROWS: ProductRow[] = [
-  { nombre: "Laptop Gaming Pro X1",        estado: "Activo",   usuarios: 21243, ventas: 8345,  vistasUsuario: 18.5, tiempoPromedio: "2m 10s" },
-  { nombre: "Smartphone Ultra 15",          estado: "Activo",   usuarios: 17224, ventas: 5853,  vistasUsuario: 9.7,  tiempoPromedio: "2m 30s" },
-  { nombre: "Auriculares BT Max",           estado: "Inactivo", usuarios:  5824, ventas: 3455,  vistasUsuario: 15.3, tiempoPromedio: "2m 10s" },
-  { nombre: "Monitor 4K ProView",           estado: "Activo",   usuarios:  9624, ventas: 11265, vistasUsuario: 4.5,  tiempoPromedio: "2m 40s" },
-  { nombre: "Teclado Mecánico RGB",         estado: "Activo",   usuarios: 16724, ventas:  3853, vistasUsuario: 3.1,  tiempoPromedio: "2m 55s" },
-  { nombre: "Webcam Full HD 1080",          estado: "Activo",   usuarios: 19245, ventas: 10854, vistasUsuario: 7.2,  tiempoPromedio: "2m 20s" },
-  { nombre: "Mouse Ergonómico Pro",         estado: "Inactivo", usuarios:  3224, ventas:  7853, vistasUsuario: 6.5,  tiempoPromedio: "2m 50s" },
-  { nombre: "Disco SSD 2TB NVMe",           estado: "Activo",   usuarios:  4824, ventas:  8583, vistasUsuario: 4.3,  tiempoPromedio: "3m 10s" },
-  { nombre: "Router WiFi 6 Mesh",           estado: "Inactivo", usuarios:  1824, ventas:  4583, vistasUsuario: 2.7,  tiempoPromedio: "3m 25s" },
-  { nombre: "Tablet Android 12\"",          estado: "Activo",   usuarios:  2824, ventas:  9853, vistasUsuario: 5.1,  tiempoPromedio: "3m 05s" },
-  { nombre: "Impresora Láser Color",        estado: "Activo",   usuarios:  2424, ventas:  6583, vistasUsuario: 4.8,  tiempoPromedio: "3m 15s" },
-  { nombre: "Cable USB-C PD 240W",          estado: "Inactivo", usuarios:  3624, ventas: 12353, vistasUsuario: 3.5,  tiempoPromedio: "3m 20s" },
-  { nombre: "Soporte Laptop Aluminio",      estado: "Activo",   usuarios:  1324, ventas:  5883, vistasUsuario: 2.3,  tiempoPromedio: "3m 30s" },
-  { nombre: "Hub USB-C 10 puertos",         estado: "Inactivo", usuarios:  1824, ventas:  7853, vistasUsuario: 3.2,  tiempoPromedio: "3m 15s" },
-  { nombre: "Cámara Mirrorless 32MP",       estado: "Activo",   usuarios:  2424, ventas:  9583, vistasUsuario: 2.5,  tiempoPromedio: "3m 35s" },
+  { nombre: "Laptop Gaming Pro X1",    estado: "Activo",   usuarios: 21243, ventas: 8345,  vistasUsuario: 18.5, tiempoPromedio: "2m 10s" },
+  { nombre: "Smartphone Ultra 15",     estado: "Activo",   usuarios: 17224, ventas: 5853,  vistasUsuario: 9.7,  tiempoPromedio: "2m 30s" },
+  { nombre: "Auriculares BT Max",      estado: "Inactivo", usuarios:  5824, ventas: 3455,  vistasUsuario: 15.3, tiempoPromedio: "2m 10s" },
+  { nombre: "Monitor 4K ProView",      estado: "Activo",   usuarios:  9624, ventas: 11265, vistasUsuario: 4.5,  tiempoPromedio: "2m 40s" },
+  { nombre: "Teclado Mecánico RGB",    estado: "Activo",   usuarios: 16724, ventas:  3853, vistasUsuario: 3.1,  tiempoPromedio: "2m 55s" },
+  { nombre: "Webcam Full HD 1080",     estado: "Activo",   usuarios: 19245, ventas: 10854, vistasUsuario: 7.2,  tiempoPromedio: "2m 20s" },
+  { nombre: "Mouse Ergonómico Pro",    estado: "Inactivo", usuarios:  3224, ventas:  7853, vistasUsuario: 6.5,  tiempoPromedio: "2m 50s" },
+  { nombre: "Disco SSD 2TB NVMe",      estado: "Activo",   usuarios:  4824, ventas:  8583, vistasUsuario: 4.3,  tiempoPromedio: "3m 10s" },
+  { nombre: "Router WiFi 6 Mesh",      estado: "Inactivo", usuarios:  1824, ventas:  4583, vistasUsuario: 2.7,  tiempoPromedio: "3m 25s" },
+  { nombre: 'Tablet Android 12"',      estado: "Activo",   usuarios:  2824, ventas:  9853, vistasUsuario: 5.1,  tiempoPromedio: "3m 05s" },
+  { nombre: "Impresora Láser Color",   estado: "Activo",   usuarios:  2424, ventas:  6583, vistasUsuario: 4.8,  tiempoPromedio: "3m 15s" },
+  { nombre: "Cable USB-C PD 240W",     estado: "Inactivo", usuarios:  3624, ventas: 12353, vistasUsuario: 3.5,  tiempoPromedio: "3m 20s" },
+  { nombre: "Soporte Laptop Aluminio", estado: "Activo",   usuarios:  1324, ventas:  5883, vistasUsuario: 2.3,  tiempoPromedio: "3m 30s" },
+  { nombre: "Hub USB-C 10 puertos",    estado: "Inactivo", usuarios:  1824, ventas:  7853, vistasUsuario: 3.2,  tiempoPromedio: "3m 15s" },
+  { nombre: "Cámara Mirrorless 32MP",  estado: "Activo",   usuarios:  2424, ventas:  9583, vistasUsuario: 2.5,  tiempoPromedio: "3m 35s" },
 ];
 
-const DEMO_DONUT: DonutChartProps = {
+const DEMO_DONUT: DonutChartPropsLocal = {
   title: "Ventas por país",
   total: "98.5K",
   totalLabel: "Total",
@@ -128,19 +190,19 @@ const DEMO_DONUT: DonutChartProps = {
     { label: "México",   value: 50, color: "#e53935", flag: "🇲🇽" },
     { label: "USA",      value: 35, color: "#1976d2", flag: "🇺🇸" },
     { label: "Colombia", value: 10, color: "#43a047", flag: "🇨🇴" },
-    { label: "Otro",     value: 5,  color: "#757575"               },
+    { label: "Otro",     value: 5,  color: "#757575"              },
   ],
 };
 
-const DEMO_NAV: NavTreeProps = {
+const DEMO_NAV: NavTreePropsLocal = {
   title: "Líneas de producto",
   items: [
     {
       label: "Sitio web",
       children: [
-        { label: "Inicio",    href: "/" },
-        { label: "Pricing",   href: "/pricing" },
-        { label: "About us",  href: "/about" },
+        { label: "Inicio",   href: "/"        },
+        { label: "Pricing",  href: "/pricing" },
+        { label: "About us", href: "/about"   },
         {
           label: "Store",
           children: [
@@ -157,32 +219,18 @@ const DEMO_NAV: NavTreeProps = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// TIPOS DE PROPS — todos opcionales para que el componente funcione solo
+// PROPS PÚBLICOS
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface SalesDashboardProps {
-  /** Nombre visible de la tienda */
-  storeName?: string;
-  /** Texto del breadcrumb */
-  subtitle?: string;
-  /** Periodo mostrado, ej: "Abr 2025" */
-  period?: string;
-  /** Array de KPI cards (máx 4 recomendado) */
-  kpis?: KpiCardProps[];
-  /** Gráfico de área (visitas/sesiones) */
-  sessions?: SparklineCardProps;
-  /** Gráfico de barras (ingresos) */
-  pageViews?: BarChartCardProps;
-  /** Título de la tabla */
-  tableTitle?: string;
-  /** Columnas de la tabla */
-  tableColumns?: TableColumn<Record<string, unknown>>[];
-  /** Filas de la tabla */
-  tableRows?: Record<string, unknown>[];
-  /** Árbol de categorías (panel derecho) */
-  navTree?: NavTreeProps;
-  /** Gráfico de dona (panel derecho) */
-  donut?: DonutChartProps;
+  kpis?:         KpiCardPropsLocal[];
+  sessions?:     SparklineCardPropsLocal;
+  pageViews?:    BarChartCardPropsLocal;
+  tableTitle?:   string;
+  tableColumns?: TableColumnLocal<ProductRow>[];
+  tableRows?:    ProductRow[];
+  navTree?:      NavTreePropsLocal;
+  donut?:        DonutChartPropsLocal;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -192,102 +240,77 @@ export interface SalesDashboardProps {
 /**
  * SalesDashboard
  *
- * Uso mínimo — funciona con datos demo sin pasar ningún prop:
- *   <SalesDashboard />
+ * Sin props → muestra datos demo.
+ * Con props → usa tus datos reales.
  *
- * Uso con datos reales:
- *   <SalesDashboard
- *     storeName="RenshaMarket"
- *     kpis={misKpis}
- *     sessions={misVisitas}
- *     tableColumns={columnas}
- *     tableRows={productos}
- *   />
+ * @example
+ * <SalesDashboard />
+ * <SalesDashboard kpis={misKpis} tableRows={misProductos} />
  */
 export const SalesDashboard: React.FC<SalesDashboardProps> = ({
-  storeName   = "Tu Tienda",
-  subtitle    = "Dashboard › Inicio",
-  period      = "Abr 2025",
-  kpis        = DEMO_KPIS,
-  sessions    = DEMO_SESSIONS,
-  pageViews   = DEMO_BAR,
-  tableTitle  = "Detalle de productos",
-  tableColumns = DEMO_COLUMNS as TableColumn<Record<string, unknown>>[],
-  tableRows    = DEMO_ROWS   as Record<string, unknown>[],
-  navTree     = DEMO_NAV,
-  donut       = DEMO_DONUT,
-}) => {
-  const theme = useTheme();
-
-  return (
-    <Box sx={{ bgcolor: "background.default", minHeight: "100vh", p: { xs: 2, md: 3 } }}>
-
-      {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={3} flexWrap="wrap" gap={1}>
-        <Box>
-          <Typography variant="caption" color="text.secondary">{subtitle}</Typography>
-          <Box display="flex" alignItems="center" gap={1}>
-            <StorefrontIcon sx={{ color: "primary.main", fontSize: 22 }} />
-            <Typography variant="h5" fontWeight={700}>{storeName}</Typography>
-          </Box>
-        </Box>
-        {period && (
-          <Chip label={period} size="small" sx={{ fontWeight: 600, bgcolor: "action.hover" }} />
-        )}
-      </Box>
-
-      {/* KPI Cards */}
-      {kpis.length > 0 && (
-        <>
-          <Typography variant="overline" color="text.secondary" display="block" mb={1}>
-            Resumen
-          </Typography>
-          <Grid container spacing={2} mb={3}>
-            {kpis.map((kpi, i) => (
-              <Grid item xs={12} sm={6} md={3} key={i}>
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+  kpis         = DEMO_KPIS,
+  sessions     = DEMO_SESSIONS,
+  pageViews    = DEMO_BAR,
+  tableTitle   = "Detalle de productos",
+  tableColumns = DEMO_COLUMNS,
+  tableRows    = DEMO_ROWS,
+  navTree      = DEMO_NAV,
+  donut        = DEMO_DONUT,
+}) => (
+  <Box
+    sx={{
+      bgcolor:    "background.default",
+      minHeight:  "100vh",
+      p:          { xs: 1.5, md: 2.5 },
+      boxSizing:  "border-box",
+      overflowX:  "hidden",
+    }}
+  >
+    {/* ── Fila 1: KPIs ───────────────────────────────────────────────── */}
+    {kpis.length > 0 && (
+      <Grid container spacing={2} sx={{ mb: 2 }}>
+        {kpis.map((kpi, i) => (
+          <Grid key={i} size={{ xs: 12, sm: 6, lg: 3 }}>
+            <KpiCard {...(kpi )} />
           </Grid>
-        </>
-      )}
-
-      {/* Charts */}
-      {(sessions || pageViews) && (
-        <Grid container spacing={2} mb={3}>
-          {sessions && (
-            <Grid item xs={12} md={pageViews ? 5 : 12}>
-              <SparklineCard {...sessions} />
-            </Grid>
-          )}
-          {pageViews && (
-            <Grid item xs={12} md={sessions ? 7 : 12}>
-              <BarChartCard {...pageViews} />
-            </Grid>
-          )}
-        </Grid>
-      )}
-
-      {/* Table + Right panels */}
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={navTree || donut ? 8 : 12}>
-          <DataTable
-            title={tableTitle}
-            columns={tableColumns}
-            rows={tableRows}
-            defaultRowsPerPage={10}
-          />
-        </Grid>
-
-        {(navTree || donut) && (
-          <Grid item xs={12} md={4}>
-            <Box display="flex" flexDirection="column" gap={2}>
-              {navTree && <NavTree {...navTree} />}
-              {donut   && <DonutChart {...donut} />}
-            </Box>
-          </Grid>
-        )}
+        ))}
       </Grid>
-    </Box>
-  );
-};
+    )}
+
+    {/* ── Fila 2: Sparkline | BarChart | NavTree ─────────────────────── */}
+    <Grid container spacing={2} sx={{ mb: 2 }} alignItems="stretch">
+      {sessions && (
+        <Grid size={{ xs: 12, md: 4 }}>
+          <SparklineCard {...(sessions )} />
+        </Grid>
+      )}
+      {pageViews && (
+        <Grid size={{ xs: 12, md: 4 }}>
+          <BarChartCard {...(pageViews )} />
+        </Grid>
+      )}
+      {navTree && (
+        <Grid size={{ xs: 12, md: 4 }}>
+          <NavTree {...(navTree)} />
+        </Grid>
+      )}
+    </Grid>
+
+    {/* ── Fila 3: Tabla | Dona ───────────────────────────────────────── */}
+    <Grid container spacing={2} alignItems="flex-start">
+      <Grid size={{ xs: 12, md: donut ? 9 : 12 }}>
+        <DataTable
+          title={tableTitle}
+          columns={tableColumns }
+          rows={tableRows }
+          defaultRowsPerPage={10}
+        />
+      </Grid>
+      {donut && (
+        <Grid size={{ xs: 12, md: 3 }}>
+          <DonutChart {...(donut)} />
+        </Grid>
+      )}
+    </Grid>
+  </Box>
+);
